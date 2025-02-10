@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 // Generate OTP and send email
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -130,25 +129,47 @@ router.post("/login", async (req, res) => {
   const { emailOrUsername, password } = req.body;
 
   try {
-    // Find user by email or username
+    // console.log("🔍 Received Login Request");
+    // console.log("👉 Email/Username:", emailOrUsername);
+    // console.log("👉 Password:", password);
+
+    if (!User) {
+      console.log("❌ User model is undefined!");
+      return res
+        .status(500)
+        .json({ error: "Server error: User model not found" });
+    }
+
+    // Check if user exists
     const user = await User.findOne({
       $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
     });
 
-    if (!user || !(await user.matchPassword(password))) {
-      return res
-        .status(401)
-        .json({ error: "Invalid email/username or password" });
+    // console.log("🔍 Found User:", user);
+
+    if (!user) {
+      return res.status(401).json({ error: "❌ User not found" });
     }
 
+    // Check password
+    const isMatch = await user.matchPassword(password);
+    // console.log("🔍 Password Match:", isMatch);
+
+    if (!isMatch) {
+      return res.status(401).json({ error: "❌ Invalid password" });
+    }
+
+    // Generate Token
     const token = jwt.sign(
       { id: user._id, username: user.username, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
+    console.log("✅ Login Successful, Token Generated");
     res.status(200).json({ token, user });
   } catch (err) {
+    console.error("❌ Error in login route:", err);
     res.status(400).json({ error: err.message });
   }
 });
