@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
+const mediaRoutes = require("./routes/media"); // Import media routes
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/auth", authRoutes);
+app.use("/api", mediaRoutes); // Use media routes
 
 app.get("/", (req, res) => {
   res.send("Backend is running");
