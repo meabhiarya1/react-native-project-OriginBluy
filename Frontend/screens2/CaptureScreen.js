@@ -133,7 +133,7 @@ export default function CaptureScreen({ route, navigation }) {
       {uploadSuccess && (
         <MaterialCommunityIcons name="check-circle" size={50} color="green" style={styles.successIndicator} />
       )}
-      <Text style={styles.copyright}>© MithunKumar</Text>
+      <Text style={styles.copyright}>© AbhishekKumar</Text>
     </View>
   );
 }
