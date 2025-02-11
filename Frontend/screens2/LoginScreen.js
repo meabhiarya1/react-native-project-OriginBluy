@@ -72,7 +72,7 @@ export default function LoginScreen({ navigation }) {
         },
       ]);
     } catch (error) {
-      console.error("Login error:", error); // Log the full error object
+      // console.error("Login error:", error); // Log the full error object
       Alert.alert(
         "Login Failed",
         error.response ? error.response.data.error : "An error occurred",
