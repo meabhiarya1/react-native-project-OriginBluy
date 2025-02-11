@@ -1,45 +1,5 @@
 node_modules
 .env
 serviceAccountKey.json
-
-# {
-#   "type": "service_account",
-#   "project_id": "react-native-media-d0fba",
-#   "private_key_id": "6fd1ae9d4a5061df830632fcc395be4cc5362096",
-#   "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCYncd9jihS3c+s\n9fyEu/noVwrENQhokem69k9HBlWGZJfx4doYLso3ds6jRvw1ofsvckdBJ/ESezZh\n8k8lAmHkkpX93XFWwkEEYrK+JohyiX3qJo2ZbUmcPBHJIdnfiVOQkhtx55lV8SqF\nCgevdH9DJdeH/i3MOm3AahSw5E35/3jwqXdFURIvG7N19WaKQ6nrwMWQZGylUxrR\n0UFHkd7/1/thG8g1izRhXwL0gqsiItv6pJPfyDAeEwirX7nSsPAElXRXSdfehaun\ngffVab2h6aLE9E63drajXesdsBDvsV5ZtjsQ/bfnVrzselOTHxmAWAr73F1r4uQu\n3ISzTvebAgMBAAECggEABYb1Uh1DZZjl7BAumIoMR3dbivaWut7J9bz06xAWKdtb\ny2VQFj8fkLmrSyuHd9PJepLrdLcjGnW+5vY1GpSHAhWy+/I4qBk57JQ8f/l6SJel\nKUVDLJLSLyfXxw6ESv24uowoFUx7d6rXzOCrnZWdBEwLDcBNXU+iaO0Omcdy8YJa\nQKgIyjxBSutqDQyEYHc37KFzuMh1T16t9BVpXL7RlW1ZcKrprX9/yLUvaTSj8gIJ\nTE1gnNBDCjBiWgCccSC9J+zq4yxvuLR8xoxio5XD0Tr+2nvkT/mQa7UZehrCFV7m\ncOza0Ij7qsSIbX69Npif5a68Y2sCvXvsX+d/BpZ8oQKBgQDSxv+2OMugjL+tiTRT\naWXfy7P5jw/7eeeFZQprhVLFqyRvQhxYvZcdVK6+iiczGMYficxAbpiqyTfO0Ou4\nuBBcKZtu0yuuZYOXfAUgFC0YYSneS26VuypfYXJ1sfP+XHQui8cQGZHx2fus0kxQ\n47rEkXiZgDpEBDi79tPNGAbPYQKBgQC5XEVzyzVpGDm6REX2mhaI1W0Fk2dOnqrO\nqz2lXiKWy/H1EI+MwvMI86s9M2X3/lzdaKEBEoANZiz6SJRr6UNN1ovrS/832z5t\nXT8gxxJSazYUBZpYaddFzyg3b0TDBCrs1/ytmArzHA6EUNh0+l7U7UtmrjqzX0m/\nZl9xOG3UewKBgHbcC0VZ39JorIqSrbQ/4lgCijo3575bLyj1IpwhcdzQNtqawFt2\nhmne4C/IvnQ9CzSrw0euVl8w20zAWb0v5uHiAKnNYXuV+VAKeuVtG0T9PdwCU5kS\nE8H3tNEUCdCtmELLRfUZRkjJMPhzGuAem6rPkd+WBMVoUAoHFcc5PlXhAoGAFRub\n0RbX6zLWCA8URIPBgy2Cr7rcbciFvOklKPqyR6fL0tNi9W2RzXgqDNsYhogRvSjY\nBM49hMkY4Bt5w1wZzPhckJvj4VF3J28R7EKfJIGO8/K7Y8wRtqJjewSRuP91f+kM\nnhwNSyfrw0eNjqygNfEbwAKhLqHwPPqEbdk2MJcCgYBef6TyO7nASblVQ93E073e\nIhTfClafr6jBsF4yfx6CR4wwq2diyd7swrTpl3+J6bUDThsE33WvaL70FH1A/dNG\njFVK5bH/iZ/plOJhrX0CtdO3rjgaPa9+lAEv3cery5X7xL11EunBS/YpjISEBECe\nYcCL/LGDFKkZyq8piOxjrA==\n-----END PRIVATE KEY-----\n",
-#   "client_email": "firebase-adminsdk-fbsvc@react-native-media-d0fba.iam.gserviceaccount.com",
-#   "client_id": "107801033678497957147",
-#   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-#   "token_uri": "https://oauth2.googleapis.com/token",
-#   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-#   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40react-native-media-d0fba.iam.gserviceaccount.com",
-#   "universe_domain": "googleapis.com"
-# }
-
-
-
 firebase.js
 
-# // Import the functions you need from the SDKs you need
-# const { initializeApp } = require("firebase/app");
-# const { getStorage } = require("firebase/storage");
-# // TODO: Add SDKs for Firebase products that you want to use
-# // https://firebase.google.com/docs/web/setup#available-libraries
-
-# // Your web app's Firebase configuration
-# // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-# const firebaseConfig = {
-#   apiKey: "AIzaSyCM2KEOkGGY5B386IQfphami7JAx-f24oU",
-#   authDomain: "react-native-media-d0fba.firebaseapp.com",
-#   projectId: "react-native-media-d0fba",
-#   storageBucket: "react-native-media-d0fba.firebasestorage.app",
-#   messagingSenderId: "342392931180",
-#   appId: "1:342392931180:web:4f692a6daebc1757d3a949",
-#   measurementId: "G-274XEEREVB"
-# };
-
-# // Initialize Firebase
-# const app = initializeApp(firebaseConfig);
-# const storage = getStorage(app);
-
-# module.exports = { app, storage };
