@@ -2,6 +2,8 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
+const otpModel = require("../models/otp");
 
 const otpStorage = {};
 
@@ -103,7 +105,7 @@ const resetPassword = async (req, res) => {
     }
 
     // Update password
-    user.password = newPassword;
+    user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
     // Clear OTP and token
@@ -148,9 +150,17 @@ const forgotPassword = async (req, res) => {
 
     // Generate OTP (6-digit random number)
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes expiry
 
-    // Store OTP temporarily
-    otpStorage[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // Expires in 5 minutes
+    // Check if OTP exists, update if found, else create a new one
+    const existingOtp = await OtpModel.findOne({ email });
+    if (existingOtp) {
+      existingOtp.otp = otp;
+      existingOtp.expiresAt = expiresAt;
+      await existingOtp.save();
+    } else {
+      await OtpModel.create({ email, otp, expiresAt });
+    }
 
     // Send OTP via email
     await transporter.sendMail({
