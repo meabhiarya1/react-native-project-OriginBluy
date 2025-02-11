@@ -128,36 +128,47 @@ router.get("/media/:userId", checkAuth, async (req, res) => {
 });
 
 // Delete Media
-router.delete("/delete", checkAuth, async (req, res) => {
-  console.log("Received DELETE request:", req.body); // Log request body
+router.delete("/media/delete", checkAuth, async (req, res) => {
   try {
-    const { uris } = req.body;
-    const userId = req.user.id; // Use user ID from the decoded token
+    console.log("Received DELETE request:", req.body); // Debugging log
 
+    const { uris } = req.body;
+    const userId = req.user.id; // Get user ID from JWT token
+
+    // Validate request body
     if (!Array.isArray(uris) || uris.length === 0) {
       return res.status(400).json({ error: "No media URLs provided" });
     }
 
-    const bucket = admin.storage().bucket(); // Access storage bucket
-
-    // Track errors
+    // Track errors for failed deletions
     let deleteErrors = [];
 
-    // Extract file paths from URIs and delete files
-    await Promise.all(
-      uris.map(async (uri) => {
-        try {
-          const path = decodeURIComponent(
-            uri.split(`/${bucket.name}/`)[1].split("?")[0]
-          ); // Extract file path
-          const file = bucket.file(path);
-          await file.delete();
-        } catch (deleteError) {
-          console.error("Error deleting file:", deleteError);
+    // Loop through URIs and delete files
+    uris.forEach((uri) => {
+      try {
+        // Extract file name from the given URI
+        const fileName = path.basename(uri); // Extracts "1707631234567.jpg"
+        const userUploadDir = path.join(
+          __dirname,
+          "..",
+          "uploads",
+          userId.toString()
+        );
+        const filePath = path.join(userUploadDir, fileName);
+
+        // Check if file exists before deleting
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath); // Delete file
+          console.log(`Deleted file: ${filePath}`);
+        } else {
+          console.warn(`File not found: ${filePath}`);
           deleteErrors.push(uri);
         }
-      })
-    );
+      } catch (deleteError) {
+        console.error("Error deleting file:", deleteError);
+        deleteErrors.push(uri);
+      }
+    });
 
     if (deleteErrors.length > 0) {
       return res.status(500).json({

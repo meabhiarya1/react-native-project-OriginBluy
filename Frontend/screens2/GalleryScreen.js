@@ -70,7 +70,7 @@ export default function GalleryScreen() {
         return;
       }
 
-      await axios.delete(`${BACKEND_API}/delete`, {
+      await axios.delete(`${BACKEND_API}/media/delete`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
