@@ -2,10 +2,8 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/user");
-const bcrypt = require("bcryptjs");
-const otpModel = require("../models/otp");
+const Otp = require("../models/otp");
 
-const otpStorage = {};
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -95,7 +93,7 @@ const resetPassword = async (req, res) => {
   const { email, newPassword, resetToken } = req.body;
 
   try {
-    const otpEntry = await OtpModel.findOne({ email });
+    const otpEntry = await Otp.findOne({ email });
 
     if (!otpEntry || otpEntry.resetToken !== resetToken) {
       return res.status(400).json({ error: "Invalid or expired reset token" });
@@ -113,7 +111,7 @@ const resetPassword = async (req, res) => {
     await user.save();
 
     // Delete OTP entry after successful reset
-    await OtpModel.deleteOne({ email });
+    await Otp.deleteOne({ email });
 
     res.status(200).json({ message: "Password reset successful" });
   } catch (err) {
@@ -125,7 +123,7 @@ const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
   try {
-    const otpEntry = await OtpModel.findOne({ email });
+    const otpEntry = await Otp.findOne({ email });
 
     if (!otpEntry || otpEntry.expiresAt < Date.now()) {
       return res.status(400).json({ error: "OTP expired or invalid" });
@@ -162,13 +160,13 @@ const forgotPassword = async (req, res) => {
     const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes expiry
 
     // Check if OTP exists, update if found, else create a new one
-    const existingOtp = await OtpModel.findOne({ email });
+    const existingOtp = await Otp.findOne({ email });
     if (existingOtp) {
       existingOtp.otp = otp;
       existingOtp.expiresAt = expiresAt;
       await existingOtp.save();
     } else {
-      await OtpModel.create({ email, otp, expiresAt });
+      await Otp.create({ email, otp, expiresAt });
     }
 
     // Send OTP via email
