@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation }) {
         onPress={() => navigation.navigate('CaptureScreen')}
       >
         <FontAwesome name="camera" size={50} color="#fff" />
-        <Text style={styles.captureButtonText}>Capture Screen</Text>
+        <Text style={styles.captureButtonText}>Capture </Text>
       </TouchableOpacity>
       <Text style={styles.copyright}>© Abhishek</Text>
     </View>

@@ -44,7 +44,7 @@ export default function GalleryScreen() {
           },
         });
 
-        // console.log("Fetched media data:", response.data); // Debugging log
+        console.log("Fetched media data:", response.data); // Debugging log
 
         // Ensure response data is an array
         if (Array.isArray(response?.data) && response?.data?.length > 0) {
@@ -54,11 +54,11 @@ export default function GalleryScreen() {
           setMedia([]); // Set media to empty array if no media found
         }
       } catch (error) {
-        console.error(
-          "Error fetching media:",
-          error.response ? error.response.data : error.message
-        );
-        setError(error.message || "Failed to fetch media.");
+        // console.error(
+        //   "Error fetching media:",
+        //   error.response ? error.response.data : error.message
+        // );
+        setError("No media found. Please upload some media."); // Set error state
       } finally {
         setLoading(false);
       }
@@ -128,6 +128,7 @@ export default function GalleryScreen() {
     UPDATED_API = BACKEND_API.slice(0, -4);
   }
 
+  console.log(media);
 
   return (
     <View style={styles.container}>
@@ -147,13 +148,12 @@ export default function GalleryScreen() {
           keyExtractor={(item, index) => index.toString()} // Ensures unique keys
           renderItem={({ item }) => (
             <View style={styles.mediaContainer}>
-              {console.log("item", item)}
               {/* Image Preview */}
               <TouchableOpacity
-                onPress={() => handleImagePress(` ${UPDATED_API}/${item.url}`)}
+                onPress={() => handleImagePress(`${UPDATED_API}/${item.url}`)}
               >
                 <Image
-                  source={{ uri: ` ${UPDATED_API}/${item.url}` }}
+                  source={{ uri: `${UPDATED_API}/${item.url}` }}
                   style={styles.mediaImage}
                   resizeMode="cover"
                 />

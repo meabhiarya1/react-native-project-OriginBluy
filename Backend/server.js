@@ -1,6 +1,7 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const mediaRoutes = require("./routes/media"); // Import media routes
@@ -15,6 +16,9 @@ app.use(cors());
 // Serve static files from the uploads folder
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use("/api/auth", authRoutes);
+app.use("/api", mediaRoutes); // Use media routes
+
 const PORT = process.env.PORT || 9000;
 
 mongoose
@@ -24,9 +28,6 @@ mongoose
   })
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log("MongoDB Connection Error:", err));
-
-app.use("/api/auth", authRoutes);
-app.use("/api", mediaRoutes); // Use media routes
 
 app.get("/", (req, res) => {
   res.send("Backend is running");
