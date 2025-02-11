@@ -95,21 +95,25 @@ const resetPassword = async (req, res) => {
   const { email, newPassword, resetToken } = req.body;
 
   try {
-    if (!otpStorage[email] || otpStorage[email].resetToken !== resetToken) {
+    const otpEntry = await OtpModel.findOne({ email });
+
+    if (!otpEntry || otpEntry.resetToken !== resetToken) {
       return res.status(400).json({ error: "Invalid or expired reset token" });
     }
 
+    // Find user and update password
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Update password
+    // Hash the password before saving
+    const bcrypt = require("bcryptjs");
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
-    // Clear OTP and token
-    delete otpStorage[email];
+    // Delete OTP entry after successful reset
+    await OtpModel.deleteOne({ email });
 
     res.status(200).json({ message: "Password reset successful" });
   } catch (err) {
@@ -121,17 +125,22 @@ const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
   try {
-    if (!otpStorage[email] || otpStorage[email].expiresAt < Date.now()) {
+    const otpEntry = await OtpModel.findOne({ email });
+
+    if (!otpEntry || otpEntry.expiresAt < Date.now()) {
       return res.status(400).json({ error: "OTP expired or invalid" });
     }
 
-    if (otpStorage[email].otp !== otp) {
+    if (otpEntry.otp !== otp) {
       return res.status(400).json({ error: "Incorrect OTP" });
     }
 
-    // OTP verified, generate a temporary reset token
+    // OTP verified, generate a reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
-    otpStorage[email].resetToken = resetToken;
+
+    // Update OTP entry with reset token
+    otpEntry.resetToken = resetToken;
+    await otpEntry.save();
 
     res.status(200).json({ message: "OTP verified", resetToken });
   } catch (err) {
