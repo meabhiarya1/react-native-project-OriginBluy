@@ -4,12 +4,16 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const mediaRoutes = require("./routes/media"); // Import media routes
+const path = require("path");
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// Serve static files from the uploads folder
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = process.env.PORT || 9000;
 
