@@ -25,34 +25,40 @@ export default function GalleryScreen() {
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const { token, userID } = await getToken();
+        setLoading(true); // Set loading state to true
+        const { token, userID } = await getToken(); // Get token and userID
 
         if (!token || !userID || typeof token !== "string") {
+          console.warn("User not authenticated or invalid token.");
           setAuthenticated(false);
-          setError(null); // Clear error state if user is not authenticated
+          setMedia([]); // Clear previous media
+          setError(null); // Clear error state
+          setLoading(false);
           return;
         }
 
-        // Fetch media
-        const { data } = await axios.get(`${BACKEND_API}/media/${userID}`, {
+        // Fetch media files from backend
+        const response = await axios.get(`${BACKEND_API}/media/${userID}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        console.log("Fetched media data:", data); // Log the fetched media data
+        // console.log("Fetched media data:", response.data); // Debugging log
 
-        if (Array.isArray(data) && data.length > 0) {
-          setMedia(data);
+        // Ensure response data is an array
+        if (Array.isArray(response?.data) && response?.data?.length > 0) {
+          setMedia(response?.data);
         } else {
-          console.log("No media found for this user."); // Log if no media is found
+          console.warn("No media found for this user."); // Debugging log
+          setMedia([]); // Set media to empty array if no media found
         }
       } catch (error) {
         console.error(
           "Error fetching media:",
           error.response ? error.response.data : error.message
         );
-        setError(error.message);
+        setError(error.message || "Failed to fetch media.");
       } finally {
         setLoading(false);
       }
@@ -116,6 +122,13 @@ export default function GalleryScreen() {
     );
   };
 
+  // Remove `/api` only if it appears at the end of the URL
+  let UPDATED_API;
+  if (BACKEND_API.endsWith("/api")) {
+    UPDATED_API = BACKEND_API.slice(0, -4);
+  }
+
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -131,12 +144,22 @@ export default function GalleryScreen() {
       ) : (
         <FlatList
           data={media}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()} // Ensures unique keys
           renderItem={({ item }) => (
             <View style={styles.mediaContainer}>
-              <TouchableOpacity onPress={() => handleImagePress(item.url)}>
-                <Image source={{ uri: item.url }} style={styles.mediaImage} />
+              {console.log("item", item)}
+              {/* Image Preview */}
+              <TouchableOpacity
+                onPress={() => handleImagePress(` ${UPDATED_API}/${item.url}`)}
+              >
+                <Image
+                  source={{ uri: ` ${UPDATED_API}/${item.url}` }}
+                  style={styles.mediaImage}
+                  resizeMode="cover"
+                />
               </TouchableOpacity>
+
+              {/* Delete Button */}
               <TouchableOpacity
                 onPress={() => confirmDelete(item.url)}
                 style={styles.deleteButton}
@@ -145,6 +168,14 @@ export default function GalleryScreen() {
               </TouchableOpacity>
             </View>
           )}
+          ListEmptyComponent={() => (
+            <Text style={styles.emptyMessage}>No media available.</Text>
+          )}
+          contentContainerStyle={
+            media.length === 0
+              ? { flex: 1, justifyContent: "center", alignItems: "center" }
+              : {}
+          }
         />
       )}
 
