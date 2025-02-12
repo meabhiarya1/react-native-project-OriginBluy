@@ -13,7 +13,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import { Video } from "expo-av";
-import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons"; // For icons
+import { FontAwesome } from "@expo/vector-icons"; // For icons
 import { BACKEND_API } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
