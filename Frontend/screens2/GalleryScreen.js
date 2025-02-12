@@ -22,6 +22,8 @@ export default function GalleryScreen() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [authenticated, setAuthenticated] = useState(true); // State to track authentication
 
+  console.log(BACKEND_API)
+
   useEffect(() => {
     const fetchMedia = async () => {
       try {

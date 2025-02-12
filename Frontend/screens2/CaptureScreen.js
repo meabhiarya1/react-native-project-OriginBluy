@@ -17,6 +17,8 @@ export default function CaptureScreen({ route, navigation }) {
 
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial opacity
 
+  console.log(BACKEND_API)
+
   const openCamera = async () => {
     // Request camera permissions
     const { status } = await ImagePicker.requestCameraPermissionsAsync();

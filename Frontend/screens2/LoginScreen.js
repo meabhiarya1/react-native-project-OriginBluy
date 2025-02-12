@@ -19,6 +19,7 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false); // State for loading indicator
 
   const handleLogin = async () => {
+    console.log(BACKEND_API)
     if (!emailOrUsername) {
       Alert.alert("Validation Error", "Email or Username is required.");
       return;

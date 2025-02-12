@@ -21,6 +21,7 @@ export default function ResetPasswordScreen({ navigation }) {
 
   // Step 1: Request OTP
   const handleRequestOtp = async () => {
+    console.log(BACKEND_API)
     if (!email) {
       Alert.alert("Validation Error", "Email is required.");
       return;

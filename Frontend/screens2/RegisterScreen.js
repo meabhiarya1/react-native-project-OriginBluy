@@ -33,7 +33,7 @@ export default function RegisterScreen({ navigation }) {
         }
 
         setLoading(true); // Show loading indicator
-
+        console.log(BACKEND_API)
         try {
             const response = await axios.post(`${BACKEND_API}/auth/register`, {
                 username,
