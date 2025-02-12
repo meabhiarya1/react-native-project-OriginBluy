@@ -96,7 +96,7 @@ const resetPassword = async (req, res) => {
     const otpEntry = await Otp.findOne({ email });
 
     if (!otpEntry || otpEntry.resetToken !== resetToken) {
-      return res.status(400).json({ error: "Invalid email" });
+      return res.status(400).json({ error: "Invalid email or Expire OTP" });
     }
 
     // Find user and update password
