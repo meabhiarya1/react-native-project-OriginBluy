@@ -24,7 +24,7 @@ export default function CaptureScreen({ route, navigation }) {
   const [uploadSuccess, setUploadSuccess] = useState(false); // State to manage upload success
 
   // Retrieve user data from route params
-  const { user } = route.params || {};
+  const { user } = route?.params || {};
 
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial opacity
 
@@ -36,16 +36,17 @@ export default function CaptureScreen({ route, navigation }) {
     if (status !== "granted") {
       Alert.alert(
         "Permission required",
-        "Permission to access camera is required!"
+        "Permission to access the camera is required!"
       );
       return;
     }
 
-    // Launch camera
+    // Launch camera (allows both image & video recording)
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All, // Allows both images and videos
       quality: 1,
       allowsEditing: false,
+      videoMaxDuration: 60, // Allow max 60 sec video recording
       aspect: [4, 3],
     });
 
@@ -61,29 +62,10 @@ export default function CaptureScreen({ route, navigation }) {
     }
   };
 
-  const showSaveDialog = (uri, mimeType) => {
-    Alert.alert(
-      "Save Media",
-      `Do you want to save this ${mimeType.split("/")[0]} to your gallery?`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-          onPress: () => setMediaUri(null),
-        },
-        {
-          text: "Save",
-          onPress: () => {
-            setUploading(true); // Prevent multiple clicks
-            uploadMedia(uri, mimeType);
-          },
-        },
-      ]
-    );
-  };
-
   const uploadMedia = async (uri, mimeType) => {
-    setUploading(true); // Prevent multiple clicks while uploading
+    if (uploading) return; // Prevent multiple uploads
+
+    setUploading(true); // Lock upload button
 
     if (!user || !user?.token) {
       // Store media URI and type before navigating
@@ -106,15 +88,12 @@ export default function CaptureScreen({ route, navigation }) {
       name: `media.${mimeType.split("/")[1]}`,
     });
 
-    setUploading(true);
-
     try {
       const response = await axios.post(
         `${BACKEND_API}/media/upload`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${user.token}`,
           },
         }
@@ -123,17 +102,39 @@ export default function CaptureScreen({ route, navigation }) {
       Alert.alert("Upload Success", "Media uploaded successfully!");
       setUploadSuccess(true);
     } catch (error) {
-      // console.error(
-      //   "Error uploading media:",
-      //   error.response ? error.response.data : error.message
-      // );
+      console.error(
+        "Error uploading media:",
+        error.response ? error.response.data : error.message
+      );
       Alert.alert(
         "Upload Error",
         error.response?.data?.error ||
           "There was an issue uploading your media."
       );
-      setUploading(false);
+    } finally {
+      setUploading(false); // Unlock button after upload
     }
+  };
+
+  const showSaveDialog = (uri, mimeType) => {
+    Alert.alert(
+      "Save Media",
+      `Do you want to save this ${mimeType.split("/")[0]} to your gallery?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+          onPress: () => setMediaUri(null),
+        },
+        {
+          text: "Save",
+          onPress: () => {
+            setUploading(true); // Prevent multiple clicks
+            uploadMedia(uri, mimeType);
+          },
+        },
+      ]
+    );
   };
 
   // Fade-in animation for the media container
@@ -179,7 +180,6 @@ export default function CaptureScreen({ route, navigation }) {
           )}
         </View>
       )}
-
       <Text style={styles.copyright}>© AbhishekKumar</Text>
     </View>
   );
