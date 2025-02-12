@@ -22,7 +22,7 @@ export default function GalleryScreen() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [authenticated, setAuthenticated] = useState(true); // State to track authentication
 
-  console.log(BACKEND_API)
+  // console.log(BACKEND_API)
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -31,7 +31,8 @@ export default function GalleryScreen() {
         const { token, userID } = await getToken(); // Get token and userID
 
         if (!token || !userID || typeof token !== "string") {
-          console.warn("User not authenticated or invalid token.");
+          // console.warn("User not authenticated or invalid token.");
+          Alert.alert("User not authenticated or invalid token.");
           setAuthenticated(false);
           setMedia([]); // Clear previous media
           setError(null); // Clear error state
@@ -46,13 +47,13 @@ export default function GalleryScreen() {
           },
         });
 
-        console.log("Fetched media data:", response.data); // Debugging log
+        // console.log("Fetched media data:", response.data); // Debugging log
 
         // Ensure response data is an array
         if (Array.isArray(response?.data) && response?.data?.length > 0) {
           setMedia(response?.data);
         } else {
-          console.warn("No media found for this user."); // Debugging log
+          // console.warn("No media found for this user."); // Debugging log
           setMedia([]); // Set media to empty array if no media found
         }
       } catch (error) {
@@ -90,10 +91,10 @@ export default function GalleryScreen() {
 
       setMedia(media.filter((item) => item.url !== url));
     } catch (error) {
-      console.error(
-        "Error deleting media:",
-        error.response ? error.response.data : error.message
-      );
+      // console.error(
+      //   "Error deleting media:",
+      //   error.response ? error.response.data : error.message
+      // );
       Alert.alert(
         "Delete Error",
         "Failed to delete the media. Please try again."
@@ -130,7 +131,7 @@ export default function GalleryScreen() {
     UPDATED_API = BACKEND_API.slice(0, -4);
   }
 
-  console.log(media);
+  // console.log(media);
 
   return (
     <View style={styles.container}>

@@ -75,7 +75,7 @@ export default function CaptureScreen({ route, navigation }) {
           text: "Save",
           onPress: () => {
             setUploading(true); // Prevent multiple clicks
-            uploadMedia(uri, mimeType)
+            uploadMedia(uri, mimeType);
           },
         },
       ]
@@ -120,6 +120,7 @@ export default function CaptureScreen({ route, navigation }) {
         }
       );
       console.log("Upload successful:", response?.data?.message);
+      Alert.alert("Upload Success", "Media uploaded successfully!");
       setUploadSuccess(true);
     } catch (error) {
       // console.error(
@@ -157,7 +158,7 @@ export default function CaptureScreen({ route, navigation }) {
           <Text style={styles.buttonText}>Go to Gallery</Text>
         </TouchableOpacity>
       </View>
-      {mediaUri && !uploadSuccess && (
+      {mediaUri && (
         <View style={styles.mediaContainer}>
           {mediaType === "video" ? (
             <Video
@@ -167,25 +168,18 @@ export default function CaptureScreen({ route, navigation }) {
               resizeMode="contain"
             />
           ) : (
-            <Image source={{ uri: mediaUri }} style={styles.preview} />
-          )}
-          {uploading && (
-            <ActivityIndicator
-              size="large"
-              color="#0000ff"
-              style={styles.loadingIndicator}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                setMediaUri(null);
+                navigation.navigate("GalleryScreen");
+              }}
+            >
+              <Image source={{ uri: mediaUri }} style={styles.preview} />
+            </TouchableOpacity>
           )}
         </View>
       )}
-      {uploadSuccess && (
-        <MaterialCommunityIcons
-          name="check-circle"
-          size={50}
-          color="green"
-          style={styles.successIndicator}
-        />
-      )}
+
       <Text style={styles.copyright}>© AbhishekKumar</Text>
     </View>
   );
