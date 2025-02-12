@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/user");
 const Otp = require("../models/otp");
-
+const bcrypt = require("bcryptjs");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -90,13 +90,13 @@ const register = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { email, newPassword, resetToken } = req.body;
+  const { email, newPassword } = req.body;
 
   try {
     const otpEntry = await Otp.findOne({ email });
 
-    if (!otpEntry || otpEntry.resetToken !== resetToken) {
-      return res.status(400).json({ error: "Invalid or expired reset token" });
+    if (!otpEntry) {
+      return res.status(400).json({ error: "Invalid email" });
     }
 
     // Find user and update password
@@ -105,9 +105,11 @@ const resetPassword = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    console.log(user.password)
+
     // Hash the password before saving
-    const bcrypt = require("bcryptjs");
-    user.password = await bcrypt.hash(newPassword, 10);
+    // user.password = await bcrypt.hash(newPassword, 10);
+    user.password =  newPassword;
     await user.save();
 
     // Delete OTP entry after successful reset
@@ -134,13 +136,13 @@ const verifyOtp = async (req, res) => {
     }
 
     // OTP verified, generate a reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
+    // const resetToken = crypto.randomBytes(32).toString("hex");
 
     // Update OTP entry with reset token
-    otpEntry.resetToken = resetToken;
-    await otpEntry.save();
+    // otpEntry.resetToken = resetToken;
+    // await otpEntry.save();
 
-    res.status(200).json({ message: "OTP verified", resetToken });
+    res.status(200).json({ message: "OTP verified" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
