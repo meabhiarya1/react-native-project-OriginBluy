@@ -20,8 +20,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function CaptureScreen({ route, navigation }) {
   const [mediaUri, setMediaUri] = useState(null);
   const [mediaType, setMediaType] = useState(null);
-  const [uploading, setUploading] = useState(false); // State to manage loading indicator
-  const [uploadSuccess, setUploadSuccess] = useState(false); // State to manage upload success
 
   // Retrieve user data from route params
   const { user } = route.params || {};
