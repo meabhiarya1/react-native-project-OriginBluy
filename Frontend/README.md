@@ -1,50 +1,138 @@
-# Welcome to your Expo app 👋
+# Media Capture and Storage Mobile Application
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Overview
 
-## Get started
+This project is a media capture and storage mobile application developed using React Native with Expo. It includes backend functionality for user authentication, media upload, listing, and deletion using Node.js, Express.js, and MongoDB. The frontend allows users to capture media, view and manage their media files, and interact with the backend for various operations.
 
-1. Install dependencies
+## Project Structure
+
+### Frontend
+
+- **React Native with Expo:** The frontend application is built using React Native with Expo.
+- **Media Capture:** Users can capture images and videos, preview them, and upload them to Backend file system.
+- **Gallery Management:** Users can view, manage, and delete their uploaded media files.
+
+### Backend
+
+- **Express.js:** The backend is built using Node.js and Express.js.
+- **MongoDB Atlas:** Stores user data and handles authentication.
+- **Multer:** Handles file uploads.
+- **JWT (JSON Web Token):** Used for user authentication and authorization.
+
+## Backend API Endpoints
+
+### Authentication
+
+#### Register
+
+- **URL:** `/register`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `username`: String, required
+  - `email`: String, required
+  - `password`: String, required
+- **Response:**
+  - `token`: JWT token
+  - `user`: User object with `id`, `username`, and `email`
+
+#### Login
+
+- **URL:** `/login`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `emailOrUsername`: String, required
+  - `password`: String, required
+- **Response:**
+  - `token`: JWT token
+  - `user`: User object with `id`, `username`, and `email`
+
+#### Request OTP
+
+- **URL:** `/auth/forgot-password`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `email `: String, required
+- **Response:**
+  - `token`: JWT token
+  - `user`: "OTP Sent", "Check your email for the OTP."
+
+#### Verify OTP
+
+- **URL:** `/auth/verify-otp`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `email `: String, required
+  - `otp`: String, required
+- **Response:**
+  -  `message: "OTP verified", resetToken`
+
+#### Reset Password 
+
+- **URL:** `/auth/verify-otp`
+- **Method:** `POST`
+- **Body Parameters:**
+  - `email `: String, required
+  - `newPassword`: String, required
+  - `resetToken`: String, required
+- **Response:**
+  -  `message: "Password reset successful" `
+
+
+### Media Management
+
+#### Upload Media
+
+- **URL:** `/media/upload`
+- **Method:** `POST`
+- **Headers:**
+  - `Authorization`: Bearer token (JWT)
+- **Body:**
+  - `media`: File (image or video)
+- **Response:**
+  - `url`: Public URL of the uploaded media file
+
+#### List Media
+
+- **URL:** `/media/:userId`
+- **Method:** `GET`
+- **Headers:**
+  - `Authorization`: Bearer token (JWT)
+- **Response:**
+  - `urls`: Array of public URLs for the user's media files
+
+#### Delete Media
+
+- **URL:** `/delete`
+- **Method:** `DELETE`
+- **Headers:**
+  - `Authorization`: Bearer token (JWT)
+- **Body:**
+  - `uris`: Array of media file URLs to delete
+- **Response:**
+  - `message`: Success message or error details
+
+## Setup and Installation
+
+### Prerequisites
+
+- **Node.js**: v22.11.0
+- **MongoDB Atlas**: Access to a MongoDB Atlas cluster
+- **Expo CLI**: For running the React Native app
+- **Create .env file in backend and stored the credentials **:
+  MONGODB_URI=
+  JWT_SECRET=
+  EMAIL_USER=
+  EMAIL_PASS=
+
+### Frontend Setup
+
+1. **Clone the Repository:**
 
    ```bash
-   npm install
+   git clone https://github.com/MithunKumar09/React-Native-Expo-Media Capture and Storage Mobile Application.git
+   cd React-Native-Expo-Media Capture and Storage Mobile Application
+
+   - **Create .env file in backend and stored the credentials **:
+         BACKEND_API=
+
    ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
