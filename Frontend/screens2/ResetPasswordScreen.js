@@ -28,7 +28,6 @@ export default function ResetPasswordScreen({ navigation }) {
       Alert.alert("Validation Error", "Email is required.");
       return;
     }
-
     setLoading(true);
     try {
       const response = await axios.post(`${BACKEND_API}/auth/forgot-password`, {
@@ -63,7 +62,7 @@ export default function ResetPasswordScreen({ navigation }) {
         email,
         otp,
       });
-      setResetToken(response.data.resetToken);
+      setResetToken(response?.data?.resetToken);
       Alert.alert("OTP Verified", "You can now reset your password.");
       setStep(3); // Move to password reset step
     } catch (error) {
@@ -86,14 +85,11 @@ export default function ResetPasswordScreen({ navigation }) {
       Alert.alert("Validation Error", "New password is required.");
       return;
     }
-
     setLoading(true);
-
     try {
       await axios.post(`${BACKEND_API}/auth/reset-password`, {
         email,
         newPassword,
-        resetToken,
       });
 
       Alert.alert("Success", "Your password has been reset successfully.", [

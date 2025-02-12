@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/user");
 const Otp = require("../models/otp");
-const bcrypt = require("bcryptjs");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -90,12 +89,11 @@ const register = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { email, newPassword, resetToken } = req.body;
-
+  const { email, newPassword } = req.body;
   try {
     const otpEntry = await Otp.findOne({ email });
 
-    if (!otpEntry || otpEntry.resetToken !== resetToken) {
+    if (!otpEntry || !otpEntry.resetToken) {
       return res.status(400).json({ error: "Invalid email or Expire OTP" });
     }
 
@@ -104,9 +102,6 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    // Hash the password before saving
-    // user.password = await bcrypt.hash(newPassword, 10);
     user.password = newPassword;
     await user.save();
 
