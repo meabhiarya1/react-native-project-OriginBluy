@@ -5,7 +5,6 @@ const checkAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ error: "Authentication required" });
-    a;
   }
 
   try {
