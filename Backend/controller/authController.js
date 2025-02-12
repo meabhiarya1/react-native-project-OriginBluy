@@ -90,12 +90,12 @@ const register = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { email, newPassword } = req.body;
+  const { email, newPassword, resetToken } = req.body;
 
   try {
     const otpEntry = await Otp.findOne({ email });
 
-    if (!otpEntry) {
+    if (!otpEntry || otpEntry.resetToken !== resetToken) {
       return res.status(400).json({ error: "Invalid email" });
     }
 
@@ -105,11 +105,9 @@ const resetPassword = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log(user.password)
-
     // Hash the password before saving
     // user.password = await bcrypt.hash(newPassword, 10);
-    user.password =  newPassword;
+    user.password = newPassword;
     await user.save();
 
     // Delete OTP entry after successful reset
@@ -136,11 +134,11 @@ const verifyOtp = async (req, res) => {
     }
 
     // OTP verified, generate a reset token
-    // const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetToken = crypto.randomBytes(32).toString("hex");
 
     // Update OTP entry with reset token
-    // otpEntry.resetToken = resetToken;
-    // await otpEntry.save();
+    otpEntry.resetToken = resetToken;
+    await otpEntry.save();
 
     res.status(200).json({ message: "OTP verified" });
   } catch (err) {

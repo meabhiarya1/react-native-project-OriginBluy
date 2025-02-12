@@ -19,11 +19,11 @@ export default function ResetPasswordScreen({ navigation }) {
   const [step, setStep] = useState(1); // 1: Request OTP, 2: Verify OTP, 3: Reset Password
   const [loading, setLoading] = useState(false);
 
-  console.log(BACKEND_API)
+  // console.log(BACKEND_API)
 
   // Step 1: Request OTP
   const handleRequestOtp = async () => {
-    console.log(BACKEND_API)
+    console.log(BACKEND_API);
     if (!email) {
       Alert.alert("Validation Error", "Email is required.");
       return;
@@ -88,6 +88,7 @@ export default function ResetPasswordScreen({ navigation }) {
     }
 
     setLoading(true);
+
     try {
       await axios.post(`${BACKEND_API}/auth/reset-password`, {
         email,
